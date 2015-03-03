@@ -103,9 +103,7 @@
 		 */
 		public function exec($cmd, $debug = false) {
 			if ($this->execCommandChunkSize > 0 && strlen($cmd) > $this->execCommandChunkSize) {
-			echo "Chunking...";
 				foreach (str_split($cmd, $this->execCommandChunkSize) as $chunk) {
-					echo $chunk, "\n", "\n";
 					$this->socket->write($chunk);
 					sleep(1);
 				}
