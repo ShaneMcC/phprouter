@@ -13,6 +13,10 @@
 		protected $execIncludeCommand = true;
 		/* When running an exec, should we write in chunks? (0 or less == no)*/
 		protected $execCommandChunkSize = 4000;
+		/** Delay in ms between each chunk. */
+		protected $chunkDelay = 1000;
+		/* Delay after running any command with exec before we look for output. */
+		protected $execDelay = 0;
 
 		/**
 		 * Create the router.
@@ -46,6 +50,17 @@
 		public function setDebug($value) { $this->debug = $value; }
 
 		/**
+		 * Encode a string for non-confusing CLI output.
+		 *
+		 * @param $str String to encode
+		 * @return Encoded string.
+		 */
+		private function debugEncode($str) {
+			return str_replace("\n", '\n', $str);
+//			return urlencode($str);
+		}
+
+		/**
 		 * Get some incoming data waiting on the stream.
 		 *
 		 * @param $break When the last bit of the buffer is equal to this string,
@@ -73,12 +88,12 @@
 					$i = 0;
 					foreach ($break as $b) {
 						$doBreak = substr($data, 0 - strlen($b)) == $b;
-						if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", urlencode(substr($data, 0 - strlen($b))), "} == {", urlencode($b), "}\n"; }
+						if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($b))), "} == {", $this->debugEncode($b), "}\n"; }
 						if ($doBreak) { break; }
 					}
 				} else {
 					$doBreak = substr($data, 0 - strlen($break)) == $break;
-					if ($this->isDebug()) { echo "[", ($doBreak ? 'TRUE' : 'FALSE'), "] {", urlencode(substr($data, 0 - strlen($break))), "} == {", urlencode($break), "}\n"; }
+					if ($this->isDebug()) { echo "[", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($break))), "} == {", $this->debugEncode($break), "}\n"; }
 				}
 
 				// Abort if we have break data.
@@ -102,21 +117,25 @@
 		 * @return String containing the output of the command.
 		 */
 		public function exec($cmd, $debug = false) {
-			if ($this->execCommandChunkSize > 0 && strlen($cmd) > $this->execCommandChunkSize) {
+			$needChunking = ($this->execCommandChunkSize > 0 && strlen($cmd) > $this->execCommandChunkSize);
+			if ($needChunking) {
 				foreach (str_split($cmd, $this->execCommandChunkSize) as $chunk) {
 					$this->socket->write($chunk);
-					sleep(1);
+					usleep($this->chunkDelay * 1000);
 				}
 			} else {
 				$this->socket->write($cmd);
 			}
 
 			$this->socket->write("\n");
+			if ($needChunking) { usleep($this->chunkDelay * 1000); }
+
 			if ($this->execIncludeCommand) {
 				$this->getStreamData($cmd . "\n");
 			} else {
 				$this->getStreamData("\n");
 			}
+			usleep($this->execDelay * 1000);
 			$data = rtrim($this->getStreamData($this->breakString), "\n");
 
 			if ($this->isDebug() || $debug) {

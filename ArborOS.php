@@ -7,16 +7,17 @@
 		public function connect() {
 			$this->socket->connect();
 			$this->getStreamData("\n");
-			$this->socket->write("\n");
 
-			$this->getStreamData(array("/# "), true);
+			$this->getStreamData("/# ", true);
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
-			$data = $this->getStreamData(array("/# "), true);
+			$data = $this->getStreamData("/# ", true);
 			$this->breakString = rtrim($data, "\n");
 
 			$this->execIncludeCommand = false;
 			$this->execCommandChunkSize = 4000;
+			$this->chunkDelay = 1000;
+			$this->execDelay = 1000;
 		}
 
 		public function hasPendingConfig() {
@@ -34,8 +35,11 @@
 				return true;
 			} else {
 				$this->socket->write("config write log\n");
+				usleep($this->execDelay * 1000);
 				$this->socket->write($logMessage);
 				$this->socket->write("\n.\n");
+				usleep($this->execDelay * 1000);
+				$this->setDebug(true);
 				$this->exec('');
 
 				return true;
