@@ -17,6 +17,11 @@
 		protected $chunkDelay = 1000;
 		/* Delay after running any command with exec before we look for output. */
 		protected $execDelay = 0;
+		/* Does the OS wrap the commandline that was executed when echoing it back? */
+		protected $execCommandWraps = true;
+
+		/** Used by exec and getStreamData based on execCommandWraps. */
+		private $streamDataTrimLineBreak = false;
 
 		/**
 		 * Create the router.
@@ -81,6 +86,8 @@
 				// Read some data
 				$buf = $this->socket->read(1);
 				if ($buf == "\r") { continue; } // Ignore stupid things.
+				if ($this->streamDataTrimLineBreak && $buf == "\n") { continue; } // Trim Line Break
+
 				$data .= $buf;
 
 				// Check if we have the breakdata we need.
@@ -131,10 +138,11 @@
 			if ($needChunking) { usleep($this->chunkDelay * 1000); }
 
 			if ($this->execIncludeCommand) {
-				$this->getStreamData($cmd . "\n");
-			} else {
-				$this->getStreamData("\n");
+				$this->streamDataTrimLineBreak = $this->execCommandWraps;
+				$this->getStreamData($cmd);
+				$this->streamDataTrimLineBreak = false;
 			}
+			$this->getStreamData("\n");
 			usleep($this->execDelay * 1000);
 			$data = rtrim($this->getStreamData($this->breakString), "\n");
 

@@ -14,7 +14,8 @@
 			$data = $this->getStreamData("/# ", true);
 			$this->breakString = rtrim($data, "\n");
 
-			$this->execIncludeCommand = false;
+//			$this->execIncludeCommand = false;
+			$this->execCommandWraps = true;
 			$this->execCommandChunkSize = 4000;
 			$this->chunkDelay = 1000;
 			$this->execDelay = 1000;
