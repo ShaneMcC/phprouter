@@ -40,7 +40,6 @@
 				$this->socket->write($logMessage);
 				$this->socket->write("\n.\n");
 				usleep($this->execDelay * 1000);
-				$this->setDebug(true);
 				$this->exec('');
 
 				return true;
