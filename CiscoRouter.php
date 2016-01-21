@@ -6,6 +6,7 @@
 		/* {@inheritDoc} */
 		public function connect() {
 			$this->socket->connect();
+			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
 			$data = $this->getStreamData(array(">\n", "#\n"), true);
