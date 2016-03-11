@@ -5,10 +5,14 @@
 	abstract class Socket {
 		/** Host to connect to. */
 		private $host;
+		/** Port to connect to. */
+		private $port;
 		/** Username to use. */
 		private $user;
 		/** Password to use. */
 		private $pass;
+		/** Authentication Provider. */
+		private $auth;
 
 		/**
 		 * Create the router.
@@ -16,11 +20,19 @@
 		 * @param $host Host to connect to.
 		 * @param $user Username to use.
 		 * @param $pass Password to use.
+		 * @param $auth AuthenticationProvider class that can handle dealing
+		 *              with non-standard auth for protocols that do not include
+		 *              authentication.
 		 */
-		public function __construct($host, $user, $pass) {
-			$this->host = $host;
+		public function __construct($host, $user, $pass, $auth = null) {
 			$this->user = $user;
 			$this->pass = $pass;
+
+			$bits = explode(':', $host);
+			$this->host = $bits[0];
+			$this->port = count($bits) > 1 ? $bits[1] : -1;
+
+			$this->auth = $auth;
 		}
 
 		/**
@@ -29,6 +41,16 @@
 		 * @return The host to connect to.
 		 */
 		public function getHost() { return $this->host; }
+
+		/**
+		 * Get the port for this router to connect on.
+		 *
+		 * @param $default Default port if none is specified.
+		 * @return The port to connect to if specified, else $default
+		 */
+		public function getPort($default = -1) {
+			return $this->port > 0 ? $this->port : $default;
+		}
 
 		/**
 		 * Get the username for this router.
@@ -43,6 +65,13 @@
 		 * @return The password to connect to.
 		 */
 		public function getPass() { return $this->pass; }
+
+		/**
+		 * Get the AuthenticationProvider for this router.
+		 *
+		 * @return The AuthenticationProvider.
+		 */
+		public function getAuthenticationProvider() { return $this->auth; }
 
 		/**
 		 * Connect to the socket.

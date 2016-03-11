@@ -1,0 +1,3 @@
+[submodule "thirdparty/net_telnet"]
+	path = thirdparty/net_telnet
+	url = https://github.com/jnorell/Net_Telnet.git

@@ -1,8 +1,8 @@
 <?php
 	/**
-	 * Class to interact with a router.
+	 * Class to interact with a NetworkDevice.
 	 */
-	abstract class Router {
+	abstract class NetworkDevice implements AuthenticationProvider {
 		/** Socket */
 		protected $socket = null;
 		/** Break String. */
@@ -24,21 +24,32 @@
 		private $streamDataTrimLineBreak = false;
 
 		/**
-		 * Create the router.
+		 * Create the NetworkDevice.
 		 *
 		 * @param $host Host to connect to.
-		 * @param $user Username to use.
-		 * @param $pass Password to use.
+		 * @param $user Username to use (if using SSH)
+		 * @param $pass Password to use (if using SSH)
+		 * @param $type Type of socket connection, 'ssh' or 'telnet'
 		 */
-		public function __construct($host, $user, $pass) {
-			// TODO: Socket Types.
-			$this->socket = new SSHSocket($host, $user, $pass);
+		public function __construct($host, $user, $pass, $type = 'ssh') {
+			if ($type == 'ssh') {
+				$this->socket = new SSHSocket($host, $user, $pass, $this);
+			} else if ($type == 'telnet') {
+				$this->socket = new TelnetSocket($host, $user, $pass, $this);
+			} else if ($type == 'raw') {
+				$this->socket = new RawSocket($host, $user, $pass, $this);
+			}
 		}
 
 		/**
-		 * Connect the socket and login to the router ready to run commands.
+		 * Connect the socket and login to the NetworkDevice ready to run commands.
 		 */
 		public abstract function connect();
+
+		/** {@inheritDoc} */
+		public function handleAuth($socket) {
+			throw new Exception("handleAuth not implemented.");
+		}
 
 		/**
 		 * Is debugging enabled.
@@ -62,16 +73,16 @@
 		 */
 		private function debugEncode($str) {
 			return str_replace("\n", '\n', $str);
-//			return urlencode($str);
+//		      return urlencode($str);
 		}
 
 		/**
 		 * Get some incoming data waiting on the stream.
 		 *
 		 * @param $break When the last bit of the buffer is equal to this string,
-		 *               then we will return.
+		 *	       then we will return.
 		 * @param $includeBreakData Should the contents of $break be included in the
-		 *                          returned data.
+		 *			  returned data.
 		 * @return Data from the stream.
 		 */
 		public function getStreamData($break = null, $includeBreakData = false) {
@@ -156,16 +167,6 @@
 
 			return $data;
 		}
-
-		/**
-		 * Get the entries in the named prefix list.
-		 *
-		 * @param $name Name of prefix list
-		 * @param $type Type of prefix list
-		 * @return Array of keys => value pairs where the key is the sequence number
-		 *         and the value is "{permit,deny} mask"
-		 */
-		public function getPrefixList($name, $type = 'ipv4') { }
 
 		/**
 		 * Enable admin commands and update the breakstring if needed.

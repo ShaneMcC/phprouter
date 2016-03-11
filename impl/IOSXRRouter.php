@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Class to interact with an iosxr  router, over ssh.
+	 * Class to interact with an iosxr router, over ssh.
 	 */
 	class IOSXRRouter extends CiscoRouter {
 		/* {@inheritDoc} */

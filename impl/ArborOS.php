@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with an ArborOS device, over ssh.
 	 */
-	class ArborOS extends Router {
+	class ArborOS extends NetworkDevice {
 		/* {@inheritDoc} */
 		public function connect() {
 			$this->socket->connect();
