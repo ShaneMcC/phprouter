@@ -4,6 +4,9 @@
 	 */
 	class APCPDU extends NetworkDevice {
 
+		/** is this a new-style or old style APC CLI? */
+		private $oldDevice = true;
+
 		/** {@inheritDoc} */
 		public function handleAuth($socket) {
 			$this->getStreamData('User Name :');
@@ -14,7 +17,7 @@
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 
-			$result = $this->getStreamData(array('User Name :', "\n\n"), true);
+			$result = $this->getStreamData(array('User Name :', "\nAmerican Power Conversion"), true);
 
 			// If we are prompted for the username again then we are wrong.
 			return ($result != "User Name :");
@@ -23,16 +26,36 @@
 		/* {@inheritDoc} */
 		public function connect() {
 			$this->socket->connect();
+
 			$this->socket->write("\n");
-			$this->getStreamData("\n> \n");
+			$this->breakString = array("\n> \n", "apc>\n", "@apc>\n");
+			$this->getNextStreamData();
 
-			$this->breakString = "\n> ";
-			$this->getStreamData($this->breakString);
+			$this->oldDevice = ($this->getLastBreakString() == "\n> \n");
 
+			if ($this->oldDevice) {
+				$this->breakString = "\n> ";
+				$this->getNextStreamData();
 
-			$this->hasPager = true;
-			$this->pagerString = "\n        Press <ENTER> to continue...";
-			$this->pagerResponse = "\n";
+				$this->hasPager = true;
+				$this->pagerString = "\n        Press <ENTER> to continue...";
+				$this->pagerResponse = "\n";
+			} else {
+				// Figure out the exact prompt
+				$this->socket->write("\n");
+				$this->getStreamData("\n");
+				$this->breakString = array("apc>", "@apc>");
+				$prompt = $this->getNextStreamData(true);
+
+				$this->breakString = $prompt;
+			}
+		}
+
+		/**
+		 * Is this an old-style PDU?
+		 */
+		public function isOldStyle() {
+			return $this->oldDevice;
 		}
 
 		/**
@@ -42,6 +65,8 @@
 		 * @return Output following the last press of the escape key.
 		 */
 		public function sendEscape($count = 1) {
+			if (!$this->oldDevice) { continue; }
+
 			$this->execIncludeCommand = false;
 
 			do {
@@ -64,13 +89,20 @@
 			$page = $this->pagerString;
 			$pageresponse = $this->pagerResponse;
 
-			$this->breakString = "\n>";
+			if ($this->oldDevice) {
+				$this->socket->write(chr(0x0C)); // Ctrl-L
+				$this->breakString = "\n>";
+			} else {
+				$this->socket->write("eventlog\n");
+				$this->breakString = "\n> ";
+				$this->hasPager = true;
+			}
+
 			$this->pagerResponse = "";
 			$this->pagerString = array("\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <B>- Back, <D>- Delete\n",
-				                       "\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <D>- Delete",
-				                       "\n\n   <ESC>- Exit, <ENTER>- Refresh, <D>- Delete",
+			                           "\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <D>- Delete",
+			                           "\n\n   <ESC>- Exit, <ENTER>- Refresh, <D>- Delete",
 			                          );
-			$this->socket->write(chr(0x0C)); // Ctrl-L
 
 			$result = $this->getStreamData($this->breakString);
 			while (--$pages > 0) {
@@ -89,6 +121,9 @@
 			$this->pagerString = $page;
 			$this->breakString = $break;
 			$this->pagerResponse = $pageresponse;
+			if (!$this->oldDevice) {
+				$this->hasPager = false;
+			}
 
 			$this->socket->write(chr(0x1B)); // ESCAPE
 			$this->getStreamData($this->breakString);
@@ -100,7 +135,11 @@
 		 * Clear the event log.
 		 */
 		public function clearEventLog() {
-			$this->socket->write(chr(0x0C)); // Ctrl-L
+			if ($this->oldDevice) {
+				$this->socket->write(chr(0x0C)); // Ctrl-L
+			} else {
+				$this->socket->write("eventlog\n");
+			}
 			$this->socket->write("D");
 			$this->socket->write("YES\n");
 			$this->socket->write(chr(0x1B)); // ESCAPE
