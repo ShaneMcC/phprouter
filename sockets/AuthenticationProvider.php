@@ -9,6 +9,7 @@
 		 * Handle non-standard authentication.
 		 *
  		 * @param $socket Socket requesting authentication
+		 * @return True or False if authentication succeeded.
 		 */
 		public function handleAuth($socket);
 	}

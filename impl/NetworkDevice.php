@@ -19,6 +19,14 @@
 		protected $execDelay = 0;
 		/* Does the OS wrap the commandline that was executed when echoing it back? */
 		protected $execCommandWraps = true;
+		/** Does this socket have a "pager" that we can't turn off? */
+		protected $hasPager = false;
+		/** Pager String. */
+		protected $pagerString = "\n--- More ---";
+		/** Pager Response */
+		protected $pagerResponse = ' ';
+		/** Last breakstring that was matched. */
+		private $lastBreakStringMatched = '';
 
 		/** Used by exec and getStreamData based on execCommandWraps. */
 		private $streamDataTrimLineBreak = false;
@@ -101,30 +109,58 @@
 
 				$data .= $buf;
 
+				$foundBreakData = "";
 				// Check if we have the breakdata we need.
 				if (is_array($break)) {
 					$i = 0;
 					foreach ($break as $b) {
-						$doBreak = substr($data, 0 - strlen($b)) == $b;
-						if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($b))), "} == {", $this->debugEncode($b), "}\n"; }
+						$foundBreakData = $b;
+						$doBreak = substr($data, 0 - strlen($foundBreakData)) == $foundBreakData;
+						if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
 						if ($doBreak) { break; }
 					}
 				} else {
-					$doBreak = substr($data, 0 - strlen($break)) == $break;
-					if ($this->isDebug()) { echo "[", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($break))), "} == {", $this->debugEncode($break), "}\n"; }
+					$foundBreakData = $break;
+					$doBreak = substr($data, 0 - strlen($foundBreakData)) == $foundBreakData;
+					if ($this->isDebug()) { echo "[", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
 				}
 
 				// Abort if we have break data.
 				if ($doBreak) { break; }
+
+				// Look for pager data.
+				if ($this->hasPager) {
+					$pagers = is_array($this->pagerString) ? $this->pagerString : array($this->pagerString);
+
+					foreach ($pagers as $p) {
+						$doPager = substr($data, 0 - strlen($p)) == $p;
+						if ($doPager) {
+							$data = substr($data, 0, 0 - strlen($p));
+							$this->socket->write($this->pagerResponse);
+							break;
+						}
+					}
+				}
 			}
 
 			// Do we want to include the break data?
 			if (!$includeBreakData) {
-				$data = substr($data, 0, 0 - strlen($break));
+				$data = substr($data, 0, 0 - strlen($foundBreakData));
 			}
+
+			$this->lastBreakStringMatched = $foundBreakData;
 
 			// Return the data.
 			return $data;
+		}
+
+		/**
+		 * Return the last matching break string.
+		 *
+		 * @return Last matching breakstring from getStreamData
+		 */
+		public function getLastBreakString() {
+			return $this->lastBreakStringMatched;
 		}
 
 		/**
