@@ -54,6 +54,13 @@
 		 */
 		public abstract function connect();
 
+		/**
+		 * Disconnect from the NetworkDevice.
+		 */
+		public function disconnect() {
+			$this->socket->disconnect();
+		}
+
 		/** {@inheritDoc} */
 		public function handleAuth($socket) {
 			throw new Exception("handleAuth not implemented.");
@@ -103,7 +110,13 @@
 			// Keep going until we have the break data.
 			while (true) {
 				// Read some data
-				$buf = $this->socket->read(1);
+				try {
+					$buf = $this->socket->read(1);
+				} catch (Exception $e) {
+					// Socket probably closed, so just return whatever we have.
+					$foundBreakData = FALSE;
+					break;
+				}
 				if ($buf == "\r") { continue; } // Ignore stupid things.
 				if ($this->streamDataTrimLineBreak && $buf == "\n") { continue; } // Trim Line Break
 
@@ -152,6 +165,27 @@
 
 			// Return the data.
 			return $data;
+		}
+
+		/**
+		 * Get the next bit of incoming data waiting on the stream using the
+		 * default breakString.
+		 *
+		 * @param $includeBreakData Should the contents of $break be included in the
+		 *			  returned data.
+		 * @return Data from the stream.
+		 */
+		public function getNextStreamData($includeBreakData = false) {
+			return $this->getStreamData($this->breakString, $includeBreakData);
+		}
+
+		/**
+		 * Write the given data to the underlying socket.
+		 *
+		 * @param $data Data to write.
+		 */
+		public function write($data) {
+			$this->socket->write($data);
 		}
 
 		/**

@@ -38,16 +38,17 @@
 		/**
 		 * Send the "Escape" key.
 		 *
-		 * @param $debug Show command run, and output.
-		 * @return Output following sending the escape key.
+		 * @param $count How many times to send the escape key.
+		 * @return Output following the last press of the escape key.
 		 */
-		public function sendEscape($debug = false) {
+		public function sendEscape($count = 1) {
 			$this->execIncludeCommand = false;
-			$result = $this->exec(chr(0x1B), $debug);
-			$this->execIncludeCommand = true;
 
-			// Exec sends a "\n" which reprints the last output, swallow it.
-			$this->getStreamData($this->breakString);
+			do {
+				$result = $this->socket->write(chr(0x1B));
+				$this->getNextStreamData();
+			} while (--$count > 0);
+			$this->execIncludeCommand = true;
 
 			return $result;
 		}

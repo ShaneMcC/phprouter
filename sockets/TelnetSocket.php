@@ -38,7 +38,7 @@
 		public function read($maxBytes = 1) {
 			if ($this->connection == null || !$this->connection->online()) { throw new Exception('Socket not connected'); }
 
-			$this->connection->read_stream(null, $maxBytes);
+			$this->connection->read_stream(null, $maxBytes, 10);
 			$data = $this->connection->get_data();
 			return $data;
 		}
