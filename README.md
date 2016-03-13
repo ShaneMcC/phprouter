@@ -2,17 +2,19 @@
 
 This is set of classes designed to allow managing support multiple types of network-device via PHP.
 
-It was designed to allow pulling data from routers in quick-and-dirty scripts.
+It was originally designed to allow pulling data from routers in scripts but evolved to support other device types and usages.
 
 ## Supported Devices
 
-* HP Procurve *(via telnet or ssh)*
-* Cisco IOS *(via telnet or ssh)*
-* Cisco IOSXR *(via telnet or ssh)*
-* ArborOS *(via ssh)*
-* APC PDU *(via telnet)*
+|  Device Type          |      Telnet?       |        SSH?        |   
+| --------------------- |:------------------:|:------------------:|
+| HP Procurve           | :white_check_mark: | :white_check_mark: |
+| Cisco IOS             | :white_check_mark: | :white_check_mark: |
+| Cisco IOSXR           | :white_check_mark: | :white_check_mark: |
+| ArborOS               |        :x:         | :white_check_mark: |
+| APC PDU               | :white_check_mark: |        :x:         |
 
-Currently, support is limited to what I have access to. If you want support for something that isn't, then please provide access to the device in question. (Read-Only access is all that is required.)
+Currently, support is limited to what I have access to. If you want support for something that isn't, then please provide access to the device in question. (Read-Only should be sufficient in most cases.)
 
 ## Usage
 
