@@ -1,8 +1,26 @@
 <?php
 	/**
-	 * Class to interact with a cisco router, over ssh.
+	 * Class to interact with a cisco router.
 	 */
 	class CiscoRouter extends Router {
+
+		/** {@inheritDoc} */
+		public function handleAuth($socket) {
+			$this->getStreamData('Username:');
+			$this->socket->write($socket->getUser());
+			$this->socket->write("\n");
+			$this->getStreamData('Password:');
+			$this->socket->write($socket->getPass());
+			$this->socket->write("\n");
+			$this->getStreamData("\n");
+
+			$this->socket->write("\n");
+			$result = $this->getStreamData(array('Username:', ">\n", "#\n"), true);
+
+			// If we are prompted for the username again then we are wrong.
+			return ($result != "Username:");
+		}
+
 		/* {@inheritDoc} */
 		public function connect() {
 			$this->socket->connect();
@@ -28,7 +46,7 @@
 		}
 
 		/* {@inheritDoc} */
-		function enable($password = '') {
+		function enable($password = '', $username = '') {
 			$this->socket->write("enable\n");
 			$this->socket->write($password . "\n");
 			$this->socket->write("\n");

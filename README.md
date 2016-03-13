@@ -4,11 +4,13 @@ This is set of classes designed to allow managing support multiple types of netw
 
 It was designed to allow pulling data from routers in quick-and-dirty scripts.
 
-## Supported Routers
+## Supported Devices
 
-* Cisco IOS *(via ssh)*
-* Cisco IOSXR *(via ssh)*
+* HP Procurve *(via telnet or ssh)*
+* Cisco IOS *(via telnet or ssh)*
+* Cisco IOSXR *(via telnet or ssh)*
 * ArborOS *(via ssh)*
+* APC PDU *(via telnet)*
 
 Currently, support is limited to what I have access to. If you want support for something that isn't, then please provide access to the device in question. (Read-Only access is all that is required.)
 

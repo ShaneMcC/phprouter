@@ -16,7 +16,10 @@
 				                                     'linefeeds' => true,
 				                                    ));
 			$this->connection->connect();
-			$this->getAuthenticationProvider()->handleAuth($this);
+
+			if ($this->getAuthenticationProvider()->handleAuth($this) === false) {
+				throw new Exception('Authentication Failed.');
+			}
 		}
 
 		/* {@inheritDoc} */
@@ -38,7 +41,7 @@
 		public function read($maxBytes = 1) {
 			if ($this->connection == null || !$this->connection->online()) { throw new Exception('Socket not connected'); }
 
-			$this->connection->read_stream(null, $maxBytes, 10);
+			$this->connection->read_stream(null, $maxBytes, 86400);
 			$data = $this->connection->get_data();
 			return $data;
 		}

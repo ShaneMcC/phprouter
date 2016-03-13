@@ -16,7 +16,7 @@
 			return $entries;
 		}
 
-		function enable($password = '') {
+		function enable($password = '', $username = '') {
 			/* No-Op */
 		}
 	}

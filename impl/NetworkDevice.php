@@ -19,6 +19,12 @@
 		protected $execDelay = 0;
 		/* Does the OS wrap the commandline that was executed when echoing it back? */
 		protected $execCommandWraps = true;
+		/** Should we swallow ansi control codes? */
+		protected $swallowControlCodes = false;
+		/** Should any blocks of swallowed ansi codes be replaced with "\n" */
+		protected $insertNewLineAfterANSI = false;
+		/** If false, we won't insert a new line if the last successful character was a new line. */
+		protected $insertNewLineAfterANSIAlways = false;
 		/** Does this socket have a "pager" that we can't turn off? */
 		protected $hasPager = false;
 		/** Pager String. */
@@ -30,6 +36,10 @@
 
 		/** Used by exec and getStreamData based on execCommandWraps. */
 		private $streamDataTrimLineBreak = false;
+		/** Used by getNextChar/swallowANSI to insert characters. */
+		private $nextCharBuffer = array();
+		/* Last character we successfully read from the socket/buffer. */
+		private $lastChar = '';
 
 		/**
 		 * Create the NetworkDevice.
@@ -37,7 +47,7 @@
 		 * @param $host Host to connect to.
 		 * @param $user Username to use (if using SSH)
 		 * @param $pass Password to use (if using SSH)
-		 * @param $type Type of socket connection, 'ssh' or 'telnet'
+		 * @param $type Type of socket connection, 'ssh', 'telnet' or 'raw'
 		 */
 		public function __construct($host, $user, $pass, $type = 'ssh') {
 			if ($type == 'ssh') {
@@ -88,7 +98,22 @@
 		 */
 		private function debugEncode($str) {
 			return str_replace("\n", '\n', $str);
-//		      return urlencode($str);
+			// return urlencode($str);
+		}
+
+		/**
+		 * Get next character of input from socket.
+		 * This will look for characters in the nextCharBuffer before actually
+		 * checking the socket, to allow us to insert characters where needed.
+		 *
+		 * @return Next character of input from socket.
+		 */
+		private function getNextChar() {
+			if (count($this->nextCharBuffer) > 0) {
+				return array_shift($this->nextCharBuffer);
+			} else {
+				return $this->socket->read(1);
+			}
 		}
 
 		/**
@@ -111,15 +136,20 @@
 			while (true) {
 				// Read some data
 				try {
-					$buf = $this->socket->read(1);
+					$buf = $this->getNextChar();
+					if ($this->swallowControlCodes !== false && ($buf == chr(0x1b) || $buf == chr(0x9B)) ) {
+						$buf = $this->swallowANSI();
+					}
 				} catch (Exception $e) {
 					// Socket probably closed, so just return whatever we have.
 					$foundBreakData = FALSE;
 					break;
 				}
+
+				if ($buf == "") { continue; } // Ignore empty return from swallowANSI();
 				if ($buf == "\r") { continue; } // Ignore stupid things.
 				if ($this->streamDataTrimLineBreak && $buf == "\n") { continue; } // Trim Line Break
-
+				$this->lastChar = $buf;
 				$data .= $buf;
 
 				$foundBreakData = "";
@@ -165,6 +195,53 @@
 
 			// Return the data.
 			return $data;
+		}
+
+		/**
+		 * Swallow any incoming ansi escape codes.
+		 *
+		 * @return First non-escape code character we encounter.
+		 */
+		function swallowANSI() {
+			$code = '';
+			$start = true;
+			while (true) {
+				$next = $this->getNextChar();
+				if ($start && $next == '[') {
+					$start = false;
+					continue;
+				} else {
+					$start = false;
+				}
+				$code .= $next;
+
+				// Swallow until ord($next) is between 64 and 126 (which means
+				// it is the last character in the sequence)
+				//
+				// https://en.wikipedia.org/wiki/ANSI_escape_code#Sequence_elements
+				if (ord($next) >= 64 && ord($next) < 127) {
+					if ($this->isDebug()) { echo '@@@@ Swallow: ' . $code . "\n"; }
+
+					// Get the next character.
+					$next = $this->getNextChar();
+
+					// Check if we have an escape code, if we do, start again
+					// else return it as the next non-escape char.
+					if ($next == chr(0x1b) || $next == chr(0x9B)) {
+						$start = true;
+						$code = '';
+					} else if ($this->insertNewLineAfterANSI) {
+						$this->nextCharBuffer[] = $next;
+						if ($this->lastChar == "\n" && !$this->insertNewLineAfterANSIAlways) {
+							return "";
+						} else {
+							return "\n";
+						}
+					} else {
+						return $next;
+					}
+				}
+			}
 		}
 
 		/**
@@ -241,8 +318,9 @@
 		/**
 		 * Enable admin commands and update the breakstring if needed.
 		 *
-		 * @param $password Password for enable.
+		 * @param $password Password for enable if required.
+		 * @param $username Username for enable if required.
 		 */
-		public function enable($password = '') { }
+		public function enable($password = '', $username = '') { }
 	}
 ?>

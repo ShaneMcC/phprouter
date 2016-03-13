@@ -9,50 +9,10 @@
 		 * @param $host Host to connect to.
 		 * @param $user Username to use.
 		 * @param $pass Password to use.
+		 * @param $type Type of socket connection, 'ssh', 'telnet' or 'raw'
 		 */
-		public function __construct($host, $user, $pass) {
-			parent::__construct($host, $user, $pass);
-		}
-
-		/**
-		 * Run the given command, and return the output.
-		 *
-		 * @param $cmd Command to run
-		 * @param $debug Show command run, and output.
-		 * @return String containing the output of the command.
-		 */
-		public function exec($cmd, $debug = false) {
-			$needChunking = ($this->execCommandChunkSize > 0 && strlen($cmd) > $this->execCommandChunkSize);
-			if ($needChunking) {
-				foreach (str_split($cmd, $this->execCommandChunkSize) as $chunk) {
-					$this->socket->write($chunk);
-					usleep($this->chunkDelay * 1000);
-				}
-			} else {
-				$this->socket->write($cmd);
-			}
-
-			$this->socket->write("\n");
-			if ($needChunking) { usleep($this->chunkDelay * 1000); }
-
-			if ($this->execIncludeCommand) {
-				$this->streamDataTrimLineBreak = $this->execCommandWraps;
-				$this->getStreamData($cmd);
-				$this->streamDataTrimLineBreak = false;
-			}
-			$this->getStreamData("\n");
-			usleep($this->execDelay * 1000);
-			$data = rtrim($this->getStreamData($this->breakString), "\n");
-
-			if ($this->isDebug() || $debug) {
-				echo "-------------------------------", "\n";
-				echo $cmd, "\n";
-				echo "----------", "\n";
-				echo $data, "\n";
-				echo "-------------------------------", "\n";
-			}
-
-			return $data;
+		public function __construct($host, $user, $pass, $type = 'ssh') {
+			parent::__construct($host, $user, $pass, $type);
 		}
 
 		/**
