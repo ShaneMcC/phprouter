@@ -266,6 +266,17 @@
 		}
 
 		/**
+		 * Write the given data to the underlying socket, with a new line
+		 * automatically added.
+		 *
+		 * @param $data Data to write.
+		 */
+		public function writeln($data) {
+			$this->write($data);
+			$this->write("\n");
+		}
+
+		/**
 		 * Return the last matching break string.
 		 *
 		 * @return Last matching breakstring from getStreamData
