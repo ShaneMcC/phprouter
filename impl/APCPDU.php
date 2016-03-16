@@ -65,7 +65,7 @@
 		 * @return Output following the last press of the escape key.
 		 */
 		public function sendEscape($count = 1) {
-			if (!$this->oldDevice) { continue; }
+			if (!$this->oldDevice) { return; }
 
 			$this->execIncludeCommand = false;
 
