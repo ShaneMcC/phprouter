@@ -6,4 +6,4 @@ Fork, then close the repository
 Make your changes
 Submit a pull request
 
-Once this is done you're waiting on me to approve the pull requests, I might make some comments or request some changes or improvements and I might reject it outright, but I will provide a reason if I do this.
+Once this is done you're waiting on me to approve the pull requests, I might make some comments or request some changes or improvements and I might reject it outright, but I'll probably provide a reason if I do this.
