@@ -47,10 +47,16 @@
 		 * @param $host Host to connect to.
 		 * @param $user Username to use (if using SSH)
 		 * @param $pass Password to use (if using SSH)
-		 * @param $type Type of socket connection, 'ssh', 'telnet' or 'raw'
+		 * @param $type Type of socket connection, 'ssh', 'telnet', 'raw' or
+		 *              an instance of `Socket`. If an instance of `Socket` is
+		 *              provided, then other parameters are ignored and the
+		 *              socket is assumed to alrady know them and currently be
+		 *              not-connected.
 		 */
 		public function __construct($host, $user, $pass, $type = 'ssh') {
-			if ($type == 'ssh') {
+			if ($type instanceof Socket) {
+				$this->socket = $type;
+			} else if ($type == 'ssh') {
 				$this->socket = new SSHSocket($host, $user, $pass, $this);
 			} else if ($type == 'telnet') {
 				$this->socket = new TelnetSocket($host, $user, $pass, $this);
