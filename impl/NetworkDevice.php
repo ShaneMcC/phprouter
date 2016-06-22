@@ -143,6 +143,7 @@
 				// Read some data
 				try {
 					$buf = $this->getNextChar();
+
 					if ($this->swallowControlCodes !== false && ($buf == chr(0x1b) || $buf == chr(0x9B)) ) {
 						$buf = $this->swallowANSI();
 					}
@@ -154,6 +155,11 @@
 
 				if ($buf == "") { continue; } // Ignore empty return from swallowANSI();
 				if ($buf == "\r") { continue; } // Ignore stupid things.
+				if ($buf == "\x08") {
+					// Backspace Character, remove some output, and continue.
+					$data = substr($data, 0, -1);
+					continue;
+				}
 				if ($this->streamDataTrimLineBreak && $buf == "\n") { continue; } // Trim Line Break
 				$this->lastChar = $buf;
 				$data .= $buf;

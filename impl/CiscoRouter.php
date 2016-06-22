@@ -23,13 +23,17 @@
 
 		/* {@inheritDoc} */
 		public function connect() {
+			$this->execCommandWraps = false;
+
 			$this->socket->connect();
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
 			$data = $this->getStreamData(array(">\n", "#\n"), true);
 			$this->breakString = rtrim($data, "\n");
-			$data = $this->exec('term len 0');
+			$this->getStreamData("\n");
+			$this->exec('term width 0');
+			$this->exec('term len 0');
 		}
 
 		/* {@inheritDoc} */
