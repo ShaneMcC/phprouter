@@ -15,7 +15,9 @@
 
 	// Implementations
 	require_once(dirname(__FILE__) . '/impl/HPProcurve.php');
+	require_once(dirname(__FILE__) . '/impl/CiscoTrait.php');
 	require_once(dirname(__FILE__) . '/impl/CiscoRouter.php');
+	require_once(dirname(__FILE__) . '/impl/CiscoSwitch.php');
 	require_once(dirname(__FILE__) . '/impl/IOSXRRouter.php');
 	require_once(dirname(__FILE__) . '/impl/ArborOS.php');
 	require_once(dirname(__FILE__) . '/impl/APCPDU.php');
