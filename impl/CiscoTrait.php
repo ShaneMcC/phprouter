@@ -14,7 +14,7 @@
 			$this->getStreamData("\n");
 
 			$this->socket->write("\n");
-			$result = $this->getStreamData(array('Username:', ">\n", "#\n"), true);
+			$result = $this->getStreamData(array('Username:', ">\n", "#\n", "> \n", "# \n"), true);
 
 			// If we are prompted for the username again then we are wrong.
 			return ($result != "Username:");
