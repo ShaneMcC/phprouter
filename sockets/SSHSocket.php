@@ -12,9 +12,13 @@
 		/* {@inheritDoc} */
 		public function connect() {
 			if ($this->connection != null) { return; }
-			$this->connection = ssh2_connect($this->getHost(), $this->getPort(22));
-			ssh2_auth_password($this->connection, $this->getUser(), $this->getPass());
-			$this->stream = ssh2_shell($this->connection);
+			$conn = ssh2_connect($this->getHost(), $this->getPort(22));
+			if ($conn !== false) {
+				if (ssh2_auth_password($conn, $this->getUser(), $this->getPass())) {
+					$this->connection = $conn;
+					$this->stream = ssh2_shell($this->connection);
+				} else { throw new Exception("Unable to authenticate."); }
+			} else { throw new Exception("Unable to connect."); }
 		}
 
 		/* {@inheritDoc} */

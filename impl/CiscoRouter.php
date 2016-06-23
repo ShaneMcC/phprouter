@@ -29,10 +29,13 @@
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
-			$data = $this->getStreamData(array(">\n", "#\n"), true);
+			$data = $this->getStreamData(array(">\n", "#\n", "> \n", "# \n"), true);
+			$this->socket->write("\n");
+			$data = $this->getStreamData(array(">\n", "#\n", "> \n", "# \n"), true);
 			$this->breakString = rtrim($data, "\n");
+
 			$this->getStreamData("\n");
-			$this->exec('term width 0');
+			$this->exec('term width 500');
 			$this->exec('term len 0');
 		}
 
