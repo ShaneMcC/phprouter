@@ -33,7 +33,6 @@
 			$data = $this->getStreamData(array(">\n", "#\n", "> \n", "# \n"), true);
 			$this->breakString = rtrim($data, "\n");
 
-			$this->getStreamData("\n");
 			$this->exec('term width 500');
 			$this->exec('term len 0');
 		}
