@@ -35,6 +35,10 @@
 
 			$this->exec('term width 500');
 			$this->exec('term len 0');
+
+			if (method_exists($this, 'postConnect')) {
+				$this->postConnect();
+			}
 		}
 
 		/* {@inheritDoc} */

@@ -41,6 +41,9 @@
 		/* Last character we successfully read from the socket/buffer. */
 		private $lastChar = '';
 
+		/** Socket creation options from __construct. */
+		private $socketOpts = array();
+
 		/**
 		 * Create the NetworkDevice.
 		 *
@@ -54,6 +57,13 @@
 		 *              not-connected.
 		 */
 		public function __construct($host, $user, $pass, $type = 'ssh') {
+			$this->socketOpts = [$host, $user, $pass, $type];
+			$this->createNewSocket();
+		}
+
+		protected function createNewSocket() {
+			list($host, $user, $pass, $type) = $this->socketOpts;
+
 			if ($type instanceof Socket) {
 				$this->socket = $type;
 			} else if ($type == 'ssh') {
