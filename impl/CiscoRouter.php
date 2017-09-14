@@ -24,7 +24,7 @@
 			// Check for IPv6 bug.
 			$data = $this->exec('show ipv6');
 			if (stristr($data, 'Invalid input detected')) {
-				if (isDebug()) {
+				if ($this->isDebug()) {
 					echo '! IPv6 Bug detected.', "\n";
 				}
 
