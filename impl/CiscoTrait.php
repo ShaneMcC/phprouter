@@ -47,7 +47,8 @@
 			$this->socket->write($password . "\n");
 			$this->socket->write("\n");
 			$this->getStreamData("Password: \n");
-			$data = $this->getStreamData(array(">\n", "#\n"), true);
+			$this->getStreamData(array(">\n", "#\n"));
+			$data = $this->getStreamData(array(">", "#"), true);
 			$this->breakString = rtrim($data, "\n");
 		}
 	}
