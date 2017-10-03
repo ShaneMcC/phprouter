@@ -44,10 +44,12 @@
 		/* {@inheritDoc} */
 		function enable($password = '', $username = '') {
 			$this->socket->write("enable\n");
-			$this->socket->write($password . "\n");
-			$this->socket->write("\n");
-			$this->getStreamData("Password: \n");
-			$this->getStreamData(array(">\n", "#\n"));
+			if (!empty($password)) {
+				$this->socket->write($password . "\n");
+				$this->socket->write("\n");
+				$this->getStreamData("Password: \n");
+				$this->getStreamData(array(">\n", "#\n"));
+			}
 			$data = $this->getStreamData(array(">", "#"), true);
 			$this->breakString = rtrim($data, "\n");
 		}
