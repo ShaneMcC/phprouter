@@ -49,7 +49,7 @@
 				fclose($this->connection['pipes'][1]);
 				fclose($this->connection['pipes'][2]);
 
-				proc_close($this->connection['proc']);
+				proc_terminate($this->connection['proc']);
 				$this->connection = null;
 			}
 		}

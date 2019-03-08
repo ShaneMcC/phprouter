@@ -6,7 +6,9 @@
 	require_once(dirname(__FILE__) . '/sockets/SSHSocket.php');
 	require_once(dirname(__FILE__) . '/sockets/OpenSSHShellSocket.php');
 	require_once(dirname(__FILE__) . '/sockets/RawSocket.php');
-	require_once(dirname(__FILE__) . '/thirdparty/net_telnet/Net/Telnet.php');
+	if (file_exists(dirname(__FILE__) . '/thirdparty/net_telnet/Net/Telnet.php')) {
+		require_once(dirname(__FILE__) . '/thirdparty/net_telnet/Net/Telnet.php');
+	}
 	require_once(dirname(__FILE__) . '/sockets/TelnetSocket.php');
 
 	// Classes
