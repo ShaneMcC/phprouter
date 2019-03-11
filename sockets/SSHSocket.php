@@ -64,7 +64,7 @@
 			if ($conn !== false) {
 				if (ssh2_auth_password($conn, $this->getUser(), $this->getPass())) {
 					$this->connection = $conn;
-					$this->stream = ssh2_shell($this->connection, $this->termType, $this->env, $this->termWidth, $this->termHeight);
+					$this->stream = ssh2_shell($this->connection, $this->termType, $this->env, $this->termWidth, $this->termHeight, SSH2_TERM_UNIT_CHARS);
 				} else { throw new Exception("Unable to authenticate."); }
 			} else { throw new Exception("Unable to connect."); }
 		}
