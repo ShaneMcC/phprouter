@@ -9,6 +9,54 @@
 		/** SSH Connection stream. */
 		private $stream;
 
+		/** Env */
+		private $env = array();
+
+		/** TermType */
+		private $termType = 'vanilla';
+
+		/** Term Width */
+		private $termWidth = 80;
+
+		/** Term Height */
+		private $termHeight = 25;
+
+		/**
+		 * Allow passing alternative environment to openSSH.
+		 *
+		 * @param $params Environment vars to pass.
+		 */
+		public function setEnv($env) {
+			$this->env = $env;
+		}
+
+		/**
+		 * Set termType for session.
+		 *
+		 * @param $termType for session.
+		 */
+		public function setTermType($termType) {
+			$this->termType = $termType;
+		}
+
+		/**
+		 * Set termWidth for session.
+		 *
+		 * @param $termWidth for session.
+		 */
+		public function setTermWidth($termWidth) {
+			$this->termWidth = $termWidth;
+		}
+
+		/**
+		 * Set termHeight for session.
+		 *
+		 * @param $termHeight for session.
+		 */
+		public function setTermHeight($termHeight) {
+			$this->termHeight = $termHeight;
+		}
+
 		/* {@inheritDoc} */
 		public function connect() {
 			if ($this->connection != null) { return; }
@@ -16,7 +64,7 @@
 			if ($conn !== false) {
 				if (ssh2_auth_password($conn, $this->getUser(), $this->getPass())) {
 					$this->connection = $conn;
-					$this->stream = ssh2_shell($this->connection);
+					$this->stream = ssh2_shell($this->connection, $this->termType, $this->env, $this->termWidth, $this->termHeight);
 				} else { throw new Exception("Unable to authenticate."); }
 			} else { throw new Exception("Unable to connect."); }
 		}
