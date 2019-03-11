@@ -98,4 +98,3 @@
 		 */
 		public abstract function read($maxBytes = 1);
 	}
-?>

@@ -5,4 +5,3 @@
 	class CiscoSwitch extends NetSwitch {
 		use CiscoTrait;
 	}
-?>

@@ -25,4 +25,3 @@
 		 */
 		public function getPrefixList($name, $type = 'ipv4') { }
 	}
-?>

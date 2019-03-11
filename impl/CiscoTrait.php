@@ -54,4 +54,3 @@
 			$this->breakString = rtrim($data, "\n");
 		}
 	}
-?>

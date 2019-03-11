@@ -15,4 +15,3 @@
 			parent::__construct($host, $user, $pass, $type);
 		}
 	}
-?>

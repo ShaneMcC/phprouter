@@ -140,4 +140,3 @@
 			$this->getStreamData(array("> \n", "# \n"));
 		}
 	}
-?>
