@@ -11,6 +11,8 @@
 		protected $debug = false;
 		/* When running an exec, should we include the command we just ran in the first getStreamData? */
 		protected $execIncludeCommand = true;
+		/* How much of a command do we care about when execing? -1 == all */
+		protected $execPartialCommand = -1;
 		/* When running an exec, should we write in chunks? (0 or less == no)*/
 		protected $execCommandChunkSize = 4000;
 		/** Delay in ms between each chunk. */
@@ -330,7 +332,11 @@
 
 			if ($this->execIncludeCommand) {
 				$this->streamDataTrimLineBreak = $this->execCommandWraps;
-				$this->getStreamData($cmd);
+				if ($this->execPartialCommand > 0) {
+					$this->getStreamData(substr($cmd, 0, $this->execPartialCommand));
+				} else if ($this->execPartialCommand == -1) {
+					$this->getStreamData($cmd);
+				}
 				$this->streamDataTrimLineBreak = false;
 			}
 			$this->getStreamData("\n");
@@ -356,4 +362,3 @@
 		 */
 		public function enable($password = '', $username = '') { }
 	}
-?>
