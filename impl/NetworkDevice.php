@@ -17,6 +17,8 @@
 		protected $execCommandChunkSize = 4000;
 		/** Delay in ms between each chunk. */
 		protected $chunkDelay = 1000;
+		/** Sleep delay when looking for breakdata, microseconds. */
+		protected $breakSleep = 0;
 		/* Delay after running any command with exec before we look for output. */
 		protected $execDelay = 0;
 		/* Does the OS wrap the commandline that was executed when echoing it back? */
@@ -178,19 +180,16 @@
 
 				$foundBreakData = "";
 				// Check if we have the breakdata we need.
-				if (is_array($break)) {
-					$i = 0;
-					foreach ($break as $b) {
-						$foundBreakData = $b;
-						$doBreak = substr($data, 0 - strlen($foundBreakData)) == $foundBreakData;
-						if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
-						if ($doBreak) { break; }
-					}
-				} else {
-					$foundBreakData = $break;
+				$breakOptions = is_array($break) ? $break : [$break];
+
+				$i = 0;
+				foreach ($breakOptions as $b) {
+					$foundBreakData = $b;
 					$doBreak = substr($data, 0 - strlen($foundBreakData)) == $foundBreakData;
-					if ($this->isDebug()) { echo "[", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
+					if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
+					if ($doBreak) { break; }
 				}
+				if ($this->breakSleep > 0) { usleep($this->breakSleep); }
 
 				// Abort if we have break data.
 				if ($doBreak) { break; }
