@@ -11,6 +11,9 @@
 		/** Params */
 		private $params = '';
 
+		/** Env */
+		private $env = array();
+
 		/**
 		 * Allow passing alternative params to openSSH. (Unsupported)
 		 *
@@ -20,6 +23,15 @@
 		 */
 		public function setParams($params) {
 			$this->params = $params;
+		}
+
+		/**
+		 * Allow passing alternative environment to openSSH.
+		 *
+		 * @param $params Environment vars to pass.
+		 */
+		public function setEnv($env) {
+			$this->env = $env;
 		}
 
 		/* {@inheritDoc} */
@@ -44,7 +56,9 @@
 			$cmd .=' 2>&1';
 
 			$cwd = '/';
-			$env = array('SSHPASS' => $this->getPass());
+
+			$env = $this->env;
+			$env['SSHPASS'] = $this->getPass();
 
 			$pipes = array();
 			$proc = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
