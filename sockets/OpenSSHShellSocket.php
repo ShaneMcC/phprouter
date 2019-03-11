@@ -29,7 +29,20 @@
 
 			$descriptorspec = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
 
-			$cmd = '/usr/bin/sshpass -e /usr/bin/ssh -t -t -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no -oControlMaster=no -oControlPath=none ' . $this->params . ' ' . escapeshellarg($this->getHost()) . ' -p ' . escapeshellarg($this->getPort(22)) . ' -l ' . escapeshellarg($this->getUser()) . ' 2>&1';
+			$cmd = '/usr/bin/sshpass -e -v /usr/bin/ssh -t -t -q';
+			$cmd .= ' -o UserKnownHostsFile=/dev/null';
+			$cmd .= ' -o StrictHostKeyChecking=no';
+			$cmd .= ' -o ControlMaster=no -o ControlPath=none';
+			$cmd .= ' -o UserKnownHostsFile=/dev/null';
+			$cmd .= ' -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o GSSAPIAuthentication=no';
+			if (!empty($this->params)) {
+				$cmd .= ' ' . $this->params;
+			}
+			$cmd .= ' ' . escapeshellarg($this->getHost());
+			$cmd .= ' -p ' . escapeshellarg($this->getPort(22));
+			$cmd .=' -l ' . escapeshellarg($this->getUser());
+			$cmd .=' 2>&1';
+
 			$cwd = '/';
 			$env = array('SSHPASS' => $this->getPass());
 
