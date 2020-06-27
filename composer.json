@@ -1,0 +1,22 @@
+{
+	"name": "shanemcc/phprouter",
+	"description": "PHP Scripts for interacting with network devices",
+	"type": "project",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Shane Mc Cormack",
+			"email": "shanemcc@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=7.2"
+	},
+	"autoload": {
+		"classmap": [
+			"impl/",
+			"sockets/",
+			"thirdparty/net_telnet/Net/"
+		]
+	}
+}
