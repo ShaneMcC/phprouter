@@ -21,19 +21,13 @@
 
 
 		function postConnect() {
-			// Check for IPv6 bug.
+			// Check for potential IPv6 bug.
 			$data = $this->exec('show ipv6');
 			if (stristr($data, 'Invalid input detected')) {
 				if ($this->isDebug()) {
 					echo '! IPv6 Bug detected.', "\n";
 				}
-
-				$oldSocket = $this->socket;
-				$this->socket = null;
-
-				$this->createNewSocket();
-				$this->connect();
-				$oldSocket->disconnect();
+				$this->exec('routing-context vrf global');
 			}
 		}
 	}
