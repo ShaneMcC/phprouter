@@ -530,10 +530,10 @@ class Net_Telnet
      * @param string $mode  echo mode to use, one of
      *
      * 'local' :    Echo commands/characters sent back to user of Net_Telnet
-     * 
+     *
      * 'remote' :   Attempt to enable remote echo from TELNET peer,
      *              but falls back to local echo.
-     * 
+     *
      * 'none' :     Disable local and remote echo
      *
      * @returns string|boolean  current preferred echo mode or false on error.
@@ -628,11 +628,11 @@ class Net_Telnet
                         $this->debug("connected to ".$a.":".$this->port);
                 }
             } else
-                throw new Exception("invalid or unknown hostname: ".$this->host); 
+                throw new Exception("invalid or unknown hostname: ".$this->host);
         }
 
         if (! $this->s)
-            throw new Exception("connection failed:  $errstr ($errno)"); 
+            throw new Exception("connection failed:  $errstr ($errno)");
         else
             stream_set_timeout($this->s, $this->timeout);
 
@@ -688,7 +688,7 @@ class Net_Telnet
         $written=0;
         $n=0;
 
-        if ($this->s === null) 
+        if ($this->s === null)
             return 0;
 
         if ($data !== null && strlen($data) > 0) {
@@ -828,7 +828,7 @@ class Net_Telnet
                 switch ($opt)
                 {
                     case TELOPT_BINARY:
-                        if ($this->mode['rx_binmode']) { continue; }
+                        if ($this->mode['rx_binmode']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         // maybe should default to "DO" but needs testing
                         if (array_key_exists(TEL_DO, $this->telcmds['sent'][$opt])) {
@@ -838,7 +838,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_DONT, $opt);
                         break;
                     case TELOPT_ECHO:
-                        if ($this->mode['echo_remote']) { continue; }
+                        if ($this->mode['echo_remote']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         switch ($this->mode['echomode'])
                         {
@@ -866,7 +866,7 @@ class Net_Telnet
 
                         break;
                     case TELOPT_SGA:
-                        if ($this->mode['rx_sga']) { continue; }
+                        if ($this->mode['rx_sga']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Enabling Suppress Go Ahead (SGA) on Receive");
                         $this->mode['rx_sga'] = true;
@@ -901,7 +901,7 @@ class Net_Telnet
                 switch ($opt)
                 {
                     case TELOPT_BINARY:
-                        if (! $this->mode['rx_binmode']) { continue; }
+                        if (! $this->mode['rx_binmode']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Disabling Binary Mode on receive");
                         $this->mode['rx_binmode'] = false;
@@ -910,7 +910,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_DONT, $opt);
                         break;
                     case TELOPT_ECHO:
-                        if (! $this->mode['echo_remote']) { continue; }
+                        if (! $this->mode['echo_remote']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         switch ($this->mode['echomode'])
                         {
@@ -924,7 +924,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_DONT, $opt);
                         break;
                     case TELOPT_SGA:
-                        if (! $this->mode['rx_sga']) { continue; }
+                        if (! $this->mode['rx_sga']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Disabling Suppress Go Ahead (SGA) on Receive");
                         $this->mode['rx_sga'] = false;
@@ -968,7 +968,7 @@ class Net_Telnet
                 switch ($opt)
                 {
                     case TELOPT_BINARY:
-                        if ($this->mode['rx_binmode']) { continue; }
+                        if ($this->mode['rx_binmode']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         // maybe should default to "WILL" but needs testing
                         if (array_key_exists(TEL_WILL, $this->telcmds['sent'][$opt])) {
@@ -978,7 +978,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_WONT, $opt);
                         break;
                     case TELOPT_ECHO:
-                        if ($this->mode['echo_net']) { continue; }
+                        if ($this->mode['echo_net']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         if ($this->mode['echo_remote']) {
                             $this->debug("Disabling Remote Echo to prevent Echo loop");
@@ -1000,10 +1000,10 @@ class Net_Telnet
 
                         if (! array_key_exists(TEL_WILL, $this->telcmds['sent'][$opt]))
                             $this->send_telcmd(TEL_WILL, $opt);
-                        
+
                         break;
                     case TELOPT_SGA:
-                        if ($this->mode['tx_sga']) { continue; }
+                        if ($this->mode['tx_sga']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Enabling Suppress Go Ahead (SGA) on Transmit");
                         $this->mode['tx_sga'] = true;
@@ -1041,7 +1041,7 @@ class Net_Telnet
                 switch ($opt)
                 {
                     case TELOPT_BINARY:
-                        if (! $this->mode['tx_binmode']) { continue; }
+                        if (! $this->mode['tx_binmode']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Disabling Binary Mode on transmit");
                         $this->mode['tx_binmode'] = false;
@@ -1050,7 +1050,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_WONT, $opt);
                         break;
                     case TELOPT_ECHO:
-                        if (! $this->mode['echo_net']) { continue; }
+                        if (! $this->mode['echo_net']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Disabling Local Network Echo");
                         $this->mode['echo_net'] = false;
@@ -1059,7 +1059,7 @@ class Net_Telnet
                             $this->send_telcmd(TEL_WONT, $opt);
                         break;
                     case TELOPT_SGA:
-                        if (! $this->mode['tx_sga']) { continue; }
+                        if (! $this->mode['tx_sga']) { break; } // "continue" targeting switch is equivalent to "break".
 
                         $this->debug("Disabling Suppress Go Ahead (SGA) on Transmit");
                         $this->mode['tx_sga'] = false;
@@ -1185,7 +1185,7 @@ class Net_Telnet
 
         if ($this->mode['telnet'] && $esc && $this->mode['tx_binmode'])
             $data = preg_replace( '/\xff/', '\xff\xff', $data);
-                
+
         $this->writebuf .= $data;
 
         // If using remote echo, flush the network buffer
@@ -1404,7 +1404,7 @@ class Net_Telnet
         $ts = time();
 
         /**
-         * We're supposed to read any/all available data 
+         * We're supposed to read any/all available data
          * from the network, then return immediately.
          */
         $drain = false;
@@ -1495,11 +1495,11 @@ class Net_Telnet
                                 break;
                             else if ($info['timed_out'])
                                 if ($drain) break;
-                                else continue;
+                                else break; // "continue" targeting switch is equivalent to "break".
                             else if ($this->mode['telnet_bugs']) {
                                 $this->debug("Error reading TELNET option "
                                     . " char for {$TELCMDS[$c]} command");
-                                continue;
+                                break; // "continue" targeting switch is equivalent to "break".
                             } else {
                                 throw new Exception ("Error reading TELNET option "
                                     . " char for {$TELCMDS[$c]} command");
@@ -1529,10 +1529,10 @@ class Net_Telnet
                                 break;
                             else if ($info['timed_out'])
                                 if ($drain) break;
-                                else continue;
+                                else break; // "continue" targeting switch is equivalent to "break".
                             else if ($this->mode['telnet_bugs']) {
                                 $this->debug("Error reading TELNET SubNegotiation command");
-                                continue;
+                                break; // "continue" targeting switch is equivalent to "break".
                             } else
                                 throw new Exception ("Error reading TELNET SubNegotiation command");
                         }
@@ -1703,7 +1703,7 @@ class Net_Telnet
             $this->debug("login: waiting for login prompt:  "
                 . $this->login['login_prompt']);
 
-            $l = (array_key_exists('login', $this->login) ? 
+            $l = (array_key_exists('login', $this->login) ?
                 $this->login['login'] : '');
 
             if ($this->expect($this->login['login_prompt'], $l."\r") === false)
@@ -1724,7 +1724,7 @@ class Net_Telnet
             $this->debug("login: waiting for password prompt:  "
                 . $this->login['password_prompt']);
 
-            $p = (array_key_exists('password', $this->login) ? 
+            $p = (array_key_exists('password', $this->login) ?
                 $this->login['password'] : '');
 
             if ($this->expect($this->login['password_prompt'], $p."\r") === false)
