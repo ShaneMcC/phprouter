@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with a socket via SSH
 	 */
-	class SSHSocket extends Socket {
+	class SSHSocket extends RouterSocket {
 		/** SSH Connection */
 		private $connection;
 

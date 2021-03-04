@@ -2,7 +2,7 @@
 
 	// Sockets
 	require_once(dirname(__FILE__) . '/sockets/AuthenticationProvider.php');
-	require_once(dirname(__FILE__) . '/sockets/Socket.php');
+	require_once(dirname(__FILE__) . '/sockets/RouterSocket.php');
 	require_once(dirname(__FILE__) . '/sockets/SSHSocket.php');
 	require_once(dirname(__FILE__) . '/sockets/OpenSSHShellSocket.php');
 	require_once(dirname(__FILE__) . '/sockets/RawSocket.php');

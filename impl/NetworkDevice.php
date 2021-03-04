@@ -3,7 +3,7 @@
 	 * Class to interact with a NetworkDevice.
 	 */
 	abstract class NetworkDevice implements AuthenticationProvider {
-		/** Socket */
+		/** RouterSocket */
 		protected $socket = null;
 		/** Break String. */
 		protected $breakString = array(">\n", "#\n");
@@ -55,7 +55,7 @@
 		 * @param $user Username to use (if using SSH)
 		 * @param $pass Password to use (if using SSH)
 		 * @param $type Type of socket connection, 'ssh', 'telnet', 'raw' or
-		 *              an instance of `Socket`. If an instance of `Socket` is
+		 *              an instance of `RouterSocket`. If an instance of `RouterSocket` is
 		 *              provided, then other parameters are ignored and the
 		 *              socket is assumed to alrady know them and currently be
 		 *              not-connected.
@@ -68,7 +68,7 @@
 		protected function createNewSocket() {
 			list($host, $user, $pass, $type) = $this->socketOpts;
 
-			if ($type instanceof Socket) {
+			if ($type instanceof RouterSocket) {
 				$this->socket = $type;
 			} else if ($type == 'ssh') {
 				$this->socket = new SSHSocket($host, $user, $pass, $this);

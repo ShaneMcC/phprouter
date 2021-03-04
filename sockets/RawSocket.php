@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with a socket via Raw Socket.
 	 */
-	class RawSocket extends Socket {
+	class RawSocket extends RouterSocket {
 		/** Raw Connection stream. */
 		private $stream;
 

@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with a socket via Telnet.
 	 */
-	class TelnetSocket extends Socket {
+	class TelnetSocket extends RouterSocket {
 		/** Telnet Connection. */
 		private $connection;
 

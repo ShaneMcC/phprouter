@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with a socket.
 	 */
-	abstract class Socket {
+	abstract class RouterSocket {
 		/** Host to connect to. */
 		private $host;
 		/** Port to connect to. */

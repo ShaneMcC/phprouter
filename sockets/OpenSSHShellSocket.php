@@ -2,9 +2,9 @@
 	/**
 	 * Class to interact with a socket via SSH, shelling out to ssh.
 	 *
-	 * This is not as well tested as other Socket Implemenatations.
+	 * This is not as well tested as other RouterSocket Implemenatations.
 	 */
-	class OpenSSHShellSocket extends Socket {
+	class OpenSSHShellSocket extends RouterSocket {
 		/** SSH Connection */
 		private $connection;
 
