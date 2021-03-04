@@ -24,3 +24,4 @@
 	require_once(dirname(__FILE__) . '/impl/IOSXRRouter.php');
 	require_once(dirname(__FILE__) . '/impl/ArborOS.php');
 	require_once(dirname(__FILE__) . '/impl/APCPDU.php');
+	require_once(dirname(__FILE__) . '/impl/GenericShell.php');
