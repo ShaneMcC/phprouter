@@ -4,11 +4,11 @@
 	 *
 	 * Shell must support "echo" command for prompt detection.
 	 */
-	class GenericShell extends NetworkDevice {
-		public $canary;
+	class GenericShell extends NetworkDevice implements HasCanary {
+		private $canary;
 
 		public function connect() {
-			$this->canary = ' #' . md5(uniqid(true));
+			$this->canary = ' # ' . md5(uniqid(true));
 			$this->socket->connect();
 
 			$this->updatePrompt();
@@ -30,5 +30,9 @@
 
 			$data = $this->getStreamData("\n", true);
 			$this->breakString = rtrim($data, "\n");
+		}
+
+		function getCanary() {
+			return $this->canary;
 		}
 	}

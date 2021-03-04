@@ -11,6 +11,9 @@
 	}
 	require_once(dirname(__FILE__) . '/sockets/TelnetSocket.php');
 
+	// Interfaces
+	require_once(dirname(__FILE__) . '/impl/HasCanary.php');
+
 	// Classes
 	require_once(dirname(__FILE__) . '/impl/NetworkDevice.php');
 	require_once(dirname(__FILE__) . '/impl/Router.php');

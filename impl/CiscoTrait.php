@@ -2,7 +2,9 @@
 	/**
 	 * Common Traits for cisco devices.
 	 */
-	trait CiscoTrait {
+	trait CiscoTrait implements HasCanary {
+		private $canary;
+
 		/* {@inheritDoc} */
 		public function handleAuth($socket) {
 			$this->getStreamData('Username:');
@@ -22,6 +24,7 @@
 
 		/* {@inheritDoc} */
 		public function connect() {
+			$this->canary = '! ' . md5(uniqid(true));
 			$this->execCommandWraps = false;
 
 			$this->socket->connect();
@@ -52,5 +55,9 @@
 			}
 			$data = $this->getStreamData(array(">", "#"), true);
 			$this->breakString = rtrim($data, "\n");
+		}
+
+		function getCanary() {
+			return $this->canary;
 		}
 	}

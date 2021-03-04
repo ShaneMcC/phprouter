@@ -2,7 +2,7 @@
 	/**
 	 * Class to interact with a cisco router.
 	 */
-	class CiscoRouter extends Router {
+	class CiscoRouter extends Router implements HasCanary {
 		use CiscoTrait;
 
 		/* {@inheritDoc} */
