@@ -2,7 +2,7 @@
 	/**
 	 * Common Traits for cisco devices.
 	 */
-	trait CiscoTrait implements HasCanary {
+	trait CiscoTrait {
 		private $canary;
 
 		/* {@inheritDoc} */
