@@ -14,6 +14,8 @@
 		/** Env */
 		private $env = array();
 
+		private $lastError = 'Socket not connected';
+
 		/**
 		 * Allow passing alternative params to openSSH. (Unsupported)
 		 *
@@ -65,7 +67,8 @@
 			if ($proc) {
 				$this->connection = array('pipes' => $pipes, 'proc' => $proc);
 			} else {
-				throw new Exception('Failed to open SSH.');
+				$this->lastError = 'Failed to open SSH.';
+				throw new Exception($this->lastError);
 			}
 		}
 
@@ -83,16 +86,19 @@
 
 		/* {@inheritDoc} */
 		public function write($data) {
-			if ($this->connection == null) { throw new Exception('Socket not connected'); }
+			$this->checkProcess();
 
 			fwrite($this->connection['pipes'][0], $data);
 		}
 
 		/* {@inheritDoc} */
 		public function read($maxBytes = 1) {
-			if ($this->connection == null) { throw new Exception('Socket not connected'); }
+			$this->checkProcess();
 
-			if (feof($this->connection['pipes'][1])) { throw new Exception('Socket closed.'); }
+			if (feof($this->connection['pipes'][1])) {
+				$this->lastError = 'Socket closed.';
+				throw new Exception($this->lastError);
+			}
 
 			stream_set_blocking($this->connection['pipes'][1], true);
 			$data = fread($this->connection['pipes'][1], $maxBytes);
@@ -108,7 +114,7 @@
 		 * @return data read.
 		 */
 		public function readErr($maxBytes = 1) {
-			if ($this->connection == null) { throw new Exception('Socket not connected'); }
+			$this->checkProcess();
 
 			stream_set_blocking($this->connection['pipes'][2], true);
 			$data = fread($this->connection['pipes'][2], $maxBytes);
@@ -122,7 +128,28 @@
 		 * @return proc_get_status array.
 		 */
 		public function procStatus() {
-			if ($this->connection == null) { throw new Exception('Socket not connected'); }
+			$this->checkProcess();
 			return proc_get_status($this->connection['proc']);
+		}
+
+		/**
+		 * Check that our underlying process is still alive and valid.
+		 *
+		 * @return True if alive and valid, else an exception is thrown.
+		 */
+		private function checkProcess() {
+			if ($this->connection == null) {
+				throw new Exception($this->lastError);
+			} else {
+				$status = proc_get_status($this->connection['proc']);
+
+				if (!$status['running']) {
+					$this->disconnect();
+					$this->lastError = 'Socket closed with exit-code: ' . $status['exitcode'];
+					throw new Exception($this->lastError);
+				}
+			}
+
+			return TRUE;
 		}
 	}
