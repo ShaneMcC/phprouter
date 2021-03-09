@@ -21,6 +21,9 @@
 		/** Term Height */
 		private $termHeight = 25;
 
+		/** Have we changed any defaults for the ssh session? */
+		private $isDefault = true;
+
 		/**
 		 * Allow passing alternative environment to openSSH.
 		 *
@@ -28,6 +31,7 @@
 		 */
 		public function setEnv($env) {
 			$this->env = $env;
+			$this->isDefault = false;
 		}
 
 		/**
@@ -37,6 +41,7 @@
 		 */
 		public function setTermType($termType) {
 			$this->termType = $termType;
+			$this->isDefault = false;
 		}
 
 		/**
@@ -46,6 +51,7 @@
 		 */
 		public function setTermWidth($termWidth) {
 			$this->termWidth = $termWidth;
+			$this->isDefault = false;
 		}
 
 		/**
@@ -55,6 +61,7 @@
 		 */
 		public function setTermHeight($termHeight) {
 			$this->termHeight = $termHeight;
+			$this->isDefault = false;
 		}
 
 		/* {@inheritDoc} */
@@ -64,7 +71,11 @@
 			if ($conn !== false) {
 				if (ssh2_auth_password($conn, $this->getUser(), $this->getPass())) {
 					$this->connection = $conn;
-					$this->stream = ssh2_shell($this->connection, $this->termType, $this->env, $this->termWidth, $this->termHeight, SSH2_TERM_UNIT_CHARS);
+					if ($this->isDefault) {
+						$this->stream = ssh2_shell($this->connection);
+					} else {
+						$this->stream = ssh2_shell($this->connection, $this->termType, $this->env, $this->termWidth, $this->termHeight, SSH2_TERM_UNIT_CHARS);
+					}
 				} else { throw new Exception("Unable to authenticate."); }
 			} else { throw new Exception("Unable to connect."); }
 		}
