@@ -43,7 +43,7 @@
 
 			$descriptorspec = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
 
-			$cmd = '/usr/bin/sshpass -e /usr/bin/ssh -t -t -q';
+			$cmd = 'exec /usr/bin/sshpass -e /usr/bin/ssh -t -t -q';
 			$cmd .= ' -o UserKnownHostsFile=/dev/null';
 			$cmd .= ' -o StrictHostKeyChecking=no';
 			$cmd .= ' -o ControlMaster=no -o ControlPath=none';
