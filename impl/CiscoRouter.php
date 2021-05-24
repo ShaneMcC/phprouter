@@ -10,7 +10,7 @@
 			$type = ($type == 'ipv4' ? 'ip' : 'ipv6');
 			$data = $this->exec('show ' . $type . ' prefix-list ' . $name);
 
-			$entries = array();
+			$entries = [];
 			foreach (explode("\n", $data) as $line) {
 				if (preg_match('#seq ([0-9]+) (.*)$#', trim($line), $m)) {
 					$entries[$m[1]] = strtolower(trim($m[2]));

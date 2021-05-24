@@ -12,7 +12,7 @@
 		private $params = '';
 
 		/** Env */
-		private $env = array();
+		private $env = [];
 
 		private $lastError = 'Socket not connected';
 
@@ -41,7 +41,7 @@
 			if ($this->connection != null) { return; }
 			if (!file_exists('/usr/bin/sshpass') || !file_exists('/usr/bin/ssh')) { throw new Exception('This requires /usr/bin/sshpass and /usr/bin/ssh to exist.'); }
 
-			$descriptorspec = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
+			$descriptorspec = [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
 
 			$cmd = 'exec /usr/bin/sshpass -e /usr/bin/ssh -t -t -q';
 			$cmd .= ' -o UserKnownHostsFile=/dev/null';
@@ -62,10 +62,10 @@
 			$env = $this->env;
 			$env['SSHPASS'] = $this->getPass();
 
-			$pipes = array();
+			$pipes = [];
 			$proc = proc_open($cmd, $descriptorspec, $pipes, $cwd, $env);
 			if ($proc) {
-				$this->connection = array('pipes' => $pipes, 'proc' => $proc);
+				$this->connection = ['pipes' => $pipes, 'proc' => $proc];
 			} else {
 				$this->lastError = 'Failed to open SSH.';
 				throw new Exception($this->lastError);

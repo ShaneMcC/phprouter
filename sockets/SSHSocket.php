@@ -10,7 +10,7 @@
 		private $stream;
 
 		/** Env */
-		private $env = array();
+		private $env = [];
 
 		/** TermType */
 		private $termType = 'vanilla';

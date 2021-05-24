@@ -6,7 +6,7 @@
 		/** RouterSocket */
 		protected $socket = null;
 		/** Break String. */
-		protected $breakString = array(">\n", "#\n");
+		protected $breakString = [">\n", "#\n"];
 		/** Debuging enabled? */
 		protected $debug = false;
 		/* When running an exec, should we include the command we just ran in the first getStreamData? */
@@ -41,12 +41,12 @@
 		/** Used by exec and getStreamData based on execCommandWraps. */
 		private $streamDataTrimLineBreak = false;
 		/** Used by getNextChar/swallowANSI to insert characters. */
-		private $nextCharBuffer = array();
+		private $nextCharBuffer = [];
 		/* Last character we successfully read from the socket/buffer. */
 		private $lastChar = '';
 
 		/** Socket creation options from __construct. */
-		private $socketOpts = array();
+		private $socketOpts = [];
 
 		/**
 		 * Create the NetworkDevice.
@@ -66,7 +66,7 @@
 		}
 
 		protected function createNewSocket() {
-			list($host, $user, $pass, $type) = $this->socketOpts;
+			[$host, $user, $pass, $type] = $this->socketOpts;
 
 			if ($type instanceof RouterSocket) {
 				$this->socket = $type;
@@ -196,7 +196,7 @@
 
 				// Look for pager data.
 				if ($this->hasPager) {
-					$pagers = is_array($this->pagerString) ? $this->pagerString : array($this->pagerString);
+					$pagers = is_array($this->pagerString) ? $this->pagerString : [$this->pagerString];
 
 					foreach ($pagers as $p) {
 						$doPager = substr($data, 0 - strlen($p)) == $p;
