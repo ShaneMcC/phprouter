@@ -17,7 +17,7 @@
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 
-			$result = $this->getStreamData(array('User Name :', "\nAmerican Power Conversion"), true);
+			$result = $this->getStreamData(['User Name :', "\nAmerican Power Conversion"], true);
 
 			// If we are prompted for the username again then we are wrong.
 			return ($result != "User Name :");
@@ -28,7 +28,7 @@
 			$this->socket->connect();
 
 			$this->socket->write("\n");
-			$this->breakString = array("\n> \n", "apc>\n", "@apc>\n");
+			$this->breakString = ["\n> \n", "apc>\n", "@apc>\n"];
 			$this->getNextStreamData();
 
 			$this->oldDevice = ($this->getLastBreakString() == "\n> \n");
@@ -44,7 +44,7 @@
 				// Figure out the exact prompt
 				$this->socket->write("\n");
 				$this->getStreamData("\n");
-				$this->breakString = array("apc>", "@apc>");
+				$this->breakString = ["apc>", "@apc>"];
 				$prompt = $this->getNextStreamData(true);
 
 				$this->breakString = $prompt;
@@ -99,10 +99,11 @@
 			}
 
 			$this->pagerResponse = "";
-			$this->pagerString = array("\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <B>- Back, <D>- Delete\n",
-			                           "\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <D>- Delete",
-			                           "\n\n   <ESC>- Exit, <ENTER>- Refresh, <D>- Delete",
-			                          );
+			$this->pagerString = [
+				"\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <B>- Back, <D>- Delete\n",
+				"\n\n   <ESC>- Exit, <ENTER>- Refresh, <SPACE>- Next, <D>- Delete",
+				"\n\n   <ESC>- Exit, <ENTER>- Refresh, <D>- Delete",
+			];
 
 			$result = $this->getStreamData($this->breakString);
 			while (--$pages > 0) {

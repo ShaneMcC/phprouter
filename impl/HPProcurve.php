@@ -16,7 +16,16 @@
 			$this->sendUserPass($socket->getUser(), $socket->getPass());
 
 			$this->socket->write("\n");
-			$this->getStreamData(array('Username:', 'Password:', "> \n", "# \n", "Do you want to save current configuration", "Main Menu\n1. Status"));
+			$this->getStreamData(
+				[
+					'Username:',
+					'Password:',
+					"> \n",
+					"# \n",
+					"Do you want to save current configuration",
+					"Main Menu\n1. Status",
+				]
+			);
 			$result = $this->getLastBreakString();
 
 			if ($result == "Do you want to save current configuration") {
@@ -41,10 +50,11 @@
 		 *
 		 * @param $username Username to send if requested.
 		 * @param $password Password to send if requested.
+		 *
 		 * @return Nothing
 		 */
 		private function sendUserPass($username, $password) {
-			$this->getStreamData(array('Username: ', 'Password: ', "> ", "# "));
+			$this->getStreamData(['Username: ', 'Password: ', "> ", "# "]);
 			if ($this->getLastBreakString() == 'Username: ') {
 				$this->socket->write($username);
 				$this->socket->write("\n");
@@ -68,7 +78,7 @@
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
-			$data = $this->getStreamData(array("> \n", "# \n"), true);
+			$data = $this->getStreamData(["> \n", "# \n"], true);
 			if ($this->isDebug()) { echo 'PROMPT is now: ', rtrim($data, "\n"), "\n"; }
 			return rtrim($data, "\n");
 		}
@@ -92,7 +102,9 @@
 				$this->socket->write("\n");
 
 				$this->socket->write("\n");
-				$this->getStreamData(array("> \n", "# \n", "Do you want to save current configuration", "Main Menu\n1. Status"));
+				$this->getStreamData(
+					["> \n", "# \n", "Do you want to save current configuration", "Main Menu\n1. Status"]
+				);
 				$result = $this->getLastBreakString();
 
 				if ($result == "Do you want to save current configuration") {
@@ -128,7 +140,7 @@
 			$this->socket->write('0');
 
 			// CLI can be 3 or 5 depending on our access level.
-			$this->getStreamData(array("3. Command Line (CLI)", "5. Command Line (CLI)"));
+			$this->getStreamData(["3. Command Line (CLI)", "5. Command Line (CLI)"]);
 			$result = $this->getLastBreakString();
 
 			// Exit the menu, which ever menu item number it is.
@@ -137,6 +149,6 @@
 
 			// And lets try again without falling into a menu this time...
 			$this->socket->write("\n");
-			$this->getStreamData(array("> \n", "# \n"));
+			$this->getStreamData(["> \n", "# \n"]);
 		}
 	}

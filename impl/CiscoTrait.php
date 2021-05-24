@@ -16,7 +16,7 @@
 			$this->getStreamData("\n");
 
 			$this->socket->write("\n");
-			$result = $this->getStreamData(array('Username:', ">\n", "#\n", "> \n", "# \n"), true);
+			$result = $this->getStreamData(['Username:', ">\n", "#\n", "> \n", "# \n"], true);
 
 			// If we are prompted for the username again then we are wrong.
 			return ($result != "Username:");
@@ -31,9 +31,9 @@
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
-			$data = $this->getStreamData(array(">\n", "#\n", "> \n", "# \n"), true);
+			$data = $this->getStreamData([">\n", "#\n", "> \n", "# \n"], true);
 			$this->socket->write("\n");
-			$data = $this->getStreamData(array(">\n", "#\n", "> \n", "# \n"), true);
+			$data = $this->getStreamData([">\n", "#\n", "> \n", "# \n"], true);
 			$this->breakString = rtrim($data, "\n");
 
 			$this->exec('term width 500');
@@ -51,9 +51,9 @@
 				$this->socket->write($password . "\n");
 				$this->socket->write("\n");
 				$this->getStreamData("Password: \n");
-				$this->getStreamData(array(">\n", "#\n"));
+				$this->getStreamData([">\n", "#\n"]);
 			}
-			$data = $this->getStreamData(array(">", "#"), true);
+			$data = $this->getStreamData([">", "#"], true);
 			$this->breakString = rtrim($data, "\n");
 		}
 
