@@ -61,11 +61,11 @@
 		/**
 		 * Send the "Escape" key.
 		 *
-		 * @param $count How many times to send the escape key.
-		 * @return Output following the last press of the escape key.
+		 * @param int $count How many times to send the escape key.
+		 * @return string Output following the last press of the escape key.
 		 */
 		public function sendEscape($count = 1) {
-			if (!$this->oldDevice) { return; }
+			if (!$this->oldDevice) { return ''; }
 
 			$this->execIncludeCommand = false;
 
@@ -81,8 +81,8 @@
 		/**
 		 * Get the event log, handling pagination.
 		 *
-		 * @param $pages Pages of event log to return.
-		 * @return Event Log Data
+		 * @param int $pages Pages of event log to return.
+		 * @return string Event Log Data
 		 */
 		public function getEventLog($pages = 1) {
 			$break = $this->breakString;

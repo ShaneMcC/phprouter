@@ -39,9 +39,9 @@
 		 *
 		 * This handles all 3 cases.
 		 *
-		 * @param $username Username to send if requested.
-		 * @param $password Password to send if requested.
-		 * @return Nothing
+		 * @param string $username Username to send if requested.
+		 * @param string $password Password to send if requested.
+		 * @return void
 		 */
 		private function sendUserPass($username, $password) {
 			$this->getStreamData(array('Username: ', 'Password: ', "> ", "# "));
@@ -62,7 +62,7 @@
 		/**
 		 * Discover what the current prompt is.
 		 *
-		 * @return The prompt.
+		 * @return string The prompt.
 		 */
 		private function learnPrompt() {
 			$this->socket->write("\n");
