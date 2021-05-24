@@ -1,4 +1,7 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Sockets;
+
 	/**
 	 * Class to interact with a socket.
 	 */

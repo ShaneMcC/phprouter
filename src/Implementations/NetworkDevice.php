@@ -1,4 +1,14 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Implementations;
+
+	use Exception;
+	use shanemcc\PhpRouter\Sockets\AuthenticationProvider;
+	use shanemcc\PhpRouter\Sockets\RawSocket;
+	use shanemcc\PhpRouter\Sockets\RouterSocket;
+	use shanemcc\PhpRouter\Sockets\SSHSocket;
+	use shanemcc\PhpRouter\Sockets\TelnetSocket;
+
 	/**
 	 * Class to interact with a NetworkDevice.
 	 */
