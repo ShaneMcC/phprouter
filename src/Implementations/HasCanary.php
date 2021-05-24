@@ -1,4 +1,7 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Implementations;
+
 	/**
 	 * Interface to show that a device type supports "Canary" lines.
 	 *

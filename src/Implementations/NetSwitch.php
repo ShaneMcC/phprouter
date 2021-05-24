@@ -1,4 +1,9 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Implementations;
+
+	use shanemcc\PhpRouter\Sockets\RouterSocket;
+
 	/**
 	 * Class to interact with a network switch.
 	 */
