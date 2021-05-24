@@ -1,4 +1,9 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Sockets;
+
+	use Exception;
+
 	/**
 	 * Class to interact with a socket via Raw Socket.
 	 */

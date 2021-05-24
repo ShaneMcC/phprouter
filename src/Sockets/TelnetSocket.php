@@ -1,4 +1,10 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Sockets;
+
+	use Exception;
+	use Net_Telnet;
+
 	/**
 	 * Class to interact with a socket via Telnet.
 	 */

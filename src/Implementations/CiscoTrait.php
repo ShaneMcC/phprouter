@@ -1,4 +1,7 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Implementations;
+
 	/**
 	 * Common Traits for cisco devices.
 	 */
