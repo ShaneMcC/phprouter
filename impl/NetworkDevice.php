@@ -3,7 +3,7 @@
 	 * Class to interact with a NetworkDevice.
 	 */
 	abstract class NetworkDevice implements AuthenticationProvider {
-		/** RouterSocket */
+		/** @var RouterSocket */
 		protected $socket = null;
 		/** Break String. */
 		protected $breakString = [">\n", "#\n"];
@@ -51,10 +51,10 @@
 		/**
 		 * Create the NetworkDevice.
 		 *
-		 * @param $host Host to connect to.
-		 * @param $user Username to use (if using SSH)
-		 * @param $pass Password to use (if using SSH)
-		 * @param $type Type of socket connection, 'ssh', 'telnet', 'raw' or
+		 * @param string $host Host to connect to.
+		 * @param string $user Username to use (if using SSH)
+		 * @param string $pass Password to use (if using SSH)
+		 * @param string|RouterSocket $type Type of socket connection, 'ssh', 'telnet', 'raw' or
 		 *              an instance of `RouterSocket`. If an instance of `RouterSocket` is
 		 *              provided, then other parameters are ignored and the
 		 *              socket is assumed to alrady know them and currently be
@@ -99,22 +99,22 @@
 		/**
 		 * Is debugging enabled.
 		 *
-		 * @return Is debugging enabled
+		 * @return bool Is debugging enabled
 		 */
 		public function isDebug() { return $this->debug; }
 
 		/**
 		 * Set debugging on or off.
 		 *
-		 * @param $value New value for debugging.
+		 * @param bool $value New value for debugging.
 		 */
 		public function setDebug($value) { $this->debug = $value; }
 
 		/**
 		 * Encode a string for non-confusing CLI output.
 		 *
-		 * @param $str String to encode
-		 * @return Encoded string.
+		 * @param string $str String to encode
+		 * @return string Encoded string.
 		 */
 		private function debugEncode($str) {
 			return str_replace("\n", '\n', $str);
@@ -126,7 +126,7 @@
 		 * This will look for characters in the nextCharBuffer before actually
 		 * checking the socket, to allow us to insert characters where needed.
 		 *
-		 * @return Next character of input from socket.
+		 * @return string Next character of input from socket.
 		 */
 		private function getNextChar() {
 			if (count($this->nextCharBuffer) > 0) {
@@ -139,15 +139,15 @@
 		/**
 		 * Get some incoming data waiting on the stream.
 		 *
-		 * @param $break When the last bit of the buffer is equal to this string,
+		 * @param string|null $break When the last bit of the buffer is equal to this string,
 		 *	       then we will return.
-		 * @param $includeBreakData Should the contents of $break be included in the
+		 * @param bool $includeBreakData Should the contents of $break be included in the
 		 *			  returned data.
-		 * @return Data from the stream.
+		 * @return string Data from the stream.
 		 */
 		public function getStreamData($break = null, $includeBreakData = false) {
 			// We don't do anything if we don't have valid break data.
-			if ($break == null || $break == "") { return; }
+			if ($break == null || $break == "") { return ''; }
 
 			// Data collected so far.
 			$data = '';
@@ -223,7 +223,7 @@
 		/**
 		 * Swallow any incoming ansi escape codes.
 		 *
-		 * @return First non-escape code character we encounter.
+		 * @return string First non-escape code character we encounter.
 		 */
 		function swallowANSI() {
 			$code = '';
@@ -271,9 +271,9 @@
 		 * Get the next bit of incoming data waiting on the stream using the
 		 * default breakString.
 		 *
-		 * @param $includeBreakData Should the contents of $break be included in the
+		 * @param bool $includeBreakData Should the contents of $break be included in the
 		 *			  returned data.
-		 * @return Data from the stream.
+		 * @return string Data from the stream.
 		 */
 		public function getNextStreamData($includeBreakData = false) {
 			return $this->getStreamData($this->breakString, $includeBreakData);
@@ -282,7 +282,7 @@
 		/**
 		 * Write the given data to the underlying socket.
 		 *
-		 * @param $data Data to write.
+		 * @param string $data Data to write.
 		 */
 		public function write($data) {
 			$this->socket->write($data);
@@ -292,7 +292,7 @@
 		 * Write the given data to the underlying socket, with a new line
 		 * automatically added.
 		 *
-		 * @param $data Data to write.
+		 * @param string $data Data to write.
 		 */
 		public function writeln($data) {
 			$this->write($data);
@@ -302,7 +302,7 @@
 		/**
 		 * Return the last matching break string.
 		 *
-		 * @return Last matching breakstring from getStreamData
+		 * @return string Last matching breakstring from getStreamData
 		 */
 		public function getLastBreakString() {
 			return $this->lastBreakStringMatched;
@@ -311,9 +311,9 @@
 		/**
 		 * Run the given command, and return the output.
 		 *
-		 * @param $cmd Command to run
-		 * @param $debug Show command run, and output.
-		 * @return String containing the output of the command.
+		 * @param string $cmd Command to run
+		 * @param bool $debug Show command run, and output.
+		 * @return string String containing the output of the command.
 		 */
 		public function exec($cmd, $debug = false) {
 			$needChunking = ($this->execCommandChunkSize > 0 && strlen($cmd) > $this->execCommandChunkSize);
@@ -356,8 +356,8 @@
 		/**
 		 * Enable admin commands and update the breakstring if needed.
 		 *
-		 * @param $password Password for enable if required.
-		 * @param $username Username for enable if required.
+		 * @param string $password Password for enable if required.
+		 * @param string $username Username for enable if required.
 		 */
 		public function enable($password = '', $username = '') { }
 	}
