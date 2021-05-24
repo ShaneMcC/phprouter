@@ -8,10 +8,10 @@
 	 * Class to interact with a socket via SSH
 	 */
 	class SSHSocket extends RouterSocket {
-		/** SSH Connection */
+		/** @var resource SSH Connection */
 		private $connection;
 
-		/** SSH Connection stream. */
+		/** @var resource SSH Connection stream. */
 		private $stream;
 
 		/** Env */
@@ -32,7 +32,7 @@
 		/**
 		 * Allow passing alternative environment to openSSH.
 		 *
-		 * @param $params Environment vars to pass.
+		 * @param array $params Environment vars to pass.
 		 */
 		public function setEnv($env) {
 			$this->env = $env;
@@ -42,7 +42,7 @@
 		/**
 		 * Set termType for session.
 		 *
-		 * @param $termType for session.
+		 * @param string $termType for session.
 		 */
 		public function setTermType($termType) {
 			$this->termType = $termType;
@@ -52,7 +52,7 @@
 		/**
 		 * Set termWidth for session.
 		 *
-		 * @param $termWidth for session.
+		 * @param int $termWidth for session.
 		 */
 		public function setTermWidth($termWidth) {
 			$this->termWidth = $termWidth;
@@ -62,7 +62,7 @@
 		/**
 		 * Set termHeight for session.
 		 *
-		 * @param $termHeight for session.
+		 * @param int $termHeight for session.
 		 */
 		public function setTermHeight($termHeight) {
 			$this->termHeight = $termHeight;

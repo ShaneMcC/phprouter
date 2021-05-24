@@ -24,7 +24,7 @@
 		/**
 		 * Allow passing alternative params to openSSH. (Unsupported)
 		 *
-		 * @param $params Paramaters to pass. This string is used as-is, so any
+		 * @param string $params Paramaters to pass. This string is used as-is, so any
 		 *                arguments should be escaped before being passed to
 		 *                this function.
 		 */
@@ -35,7 +35,7 @@
 		/**
 		 * Allow passing alternative environment to openSSH.
 		 *
-		 * @param $params Environment vars to pass.
+		 * @param array $params Environment vars to pass.
 		 */
 		public function setEnv($env) {
 			$this->env = $env;

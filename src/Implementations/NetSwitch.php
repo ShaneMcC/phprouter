@@ -11,10 +11,10 @@
 		/**
 		 * Create the NetSwitch.
 		 *
-		 * @param $host Host to connect to.
-		 * @param $user Username to use.
-		 * @param $pass Password to use.
-		 * @param $type Type of socket connection, 'ssh', 'telnet' or 'raw'
+		 * @param string $host Host to connect to.
+		 * @param string $user Username to use.
+		 * @param string $pass Password to use.
+		 * @param string|RouterSocket $type Type of socket connection, 'ssh', 'telnet' or 'raw'
 		 */
 		public function __construct($host, $user, $pass, $type = 'ssh') {
 			parent::__construct($host, $user, $pass, $type);
