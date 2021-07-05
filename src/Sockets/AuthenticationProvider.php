@@ -11,7 +11,7 @@
 		/**
 		 * Handle non-standard authentication.
 		 *
-		 * @param RouterSocket $socket Socket requesting authentication
+ 		 * @param RouterSocket $socket Socket requesting authentication
 		 * @return bool True or False if authentication succeeded.
 		 */
 		public function handleAuth($socket);

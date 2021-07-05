@@ -149,7 +149,7 @@
 		/**
 		 * Get some incoming data waiting on the stream.
 		 *
-		 * @param string|null $break When the last bit of the buffer is equal to this string,
+		 * @param array|string|null $break When the last bit of the buffer is equal to this string,
 		 *	       then we will return.
 		 * @param bool $includeBreakData Should the contents of $break be included in the
 		 *			  returned data.
@@ -188,6 +188,7 @@
 				$this->lastChar = $buf;
 				$data .= $buf;
 
+				echo "<< $data";
 				$foundBreakData = "";
 				// Check if we have the breakdata we need.
 				$breakOptions = is_array($break) ? $break : [$break];
