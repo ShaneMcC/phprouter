@@ -1,4 +1,7 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Implementations;
+
 	/**
 	 * Class to interact with an ArborOS device, over ssh.
 	 */

@@ -1,4 +1,10 @@
 <?php
+
+	namespace shanemcc\PhpRouter\Sockets;
+
+	use Exception;
+	use Net_Telnet;
+
 	/**
 	 * Class to interact with a socket via Telnet.
 	 */
@@ -10,11 +16,14 @@
 		public function connect() {
 			if ($this->connection != null) { return; }
 
-			$this->connection = new Net_Telnet(array('host' => $this->getHost(),
-				                                     'port' => $this->getPort(23),
-				                                     'debug' => false,
-				                                     'linefeeds' => true,
-				                                    ));
+			$this->connection = new Net_Telnet(
+				[
+					'host' => $this->getHost(),
+					'port' => $this->getPort(23),
+					'debug' => false,
+					'linefeeds' => true,
+				]
+			);
 			$this->connection->connect();
 
 			if ($this->getAuthenticationProvider()->handleAuth($this) === false) {

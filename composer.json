@@ -13,9 +13,10 @@
 		"php": ">=7.2"
 	},
 	"autoload": {
+		"psr-4": {
+			"shanemcc\\PhpRouter\\": "src/"
+		},
 		"classmap": [
-			"impl/",
-			"sockets/",
 			"thirdparty/net_telnet/Net/"
 		]
 	}
