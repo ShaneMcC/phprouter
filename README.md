@@ -24,6 +24,8 @@ Example usage:
 
 ```php
 <?php
+	use ShaneMcC\PhpRouter\Implementations\CiscoRouter;
+
 	$router = new CiscoRouter('192.168.0.1', 'admin', 'password');
 	$router->connect();
 	$router->enable('enable');
