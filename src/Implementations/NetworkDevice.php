@@ -194,8 +194,14 @@
 
 				$i = 0;
 				foreach ($breakOptions as $b) {
+					if ($b === true) {
+						$foundBreakData = '';
+						$doBreak = true;
+						break;
+					}
+
 					$foundBreakData = $b;
-					$doBreak = substr($data, 0 - strlen($foundBreakData)) == $foundBreakData;
+					$doBreak = substr($data, 0 - strlen($foundBreakData)) === $foundBreakData;
 					if ($this->isDebug()) { echo "--- ", $i++, " [", ($doBreak ? 'TRUE' : 'FALSE'), "] {", $this->debugEncode(substr($data, 0 - strlen($foundBreakData))), "} == {", $this->debugEncode($foundBreakData), "}\n"; }
 					if ($doBreak) { break; }
 				}

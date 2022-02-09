@@ -31,6 +31,7 @@
 			$this->execCommandWraps = false;
 
 			$this->socket->connect();
+			$this->getStreamData(true);
 			$this->socket->write("\n");
 			$this->getStreamData("\n");
 			$this->socket->write("\n");
