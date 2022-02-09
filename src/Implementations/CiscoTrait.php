@@ -59,6 +59,7 @@
 				} else {
 					$this->socket->write("\n");
 				}
+				$this->getStreamData([">\n", "#\n"]);
 			}
 			$data = $this->getStreamData([">", "#"], true);
 			$this->breakString = rtrim($data, "\n");
