@@ -52,10 +52,13 @@
 		function enable($password = '', $username = '') {
 			$this->socket->write("enable\n");
 			if (!empty($password)) {
-				$this->socket->write($password . "\n");
-				$this->socket->write("\n");
-				$this->getStreamData("Password: \n");
-				$this->getStreamData([">\n", "#\n"]);
+				$this->getStreamData(array("Password: ", ">", "#"));
+				if ($this->getLastBreakString() == "Password: ") {
+					$this->socket->write($password . "\n");
+					$this->socket->write("\n");
+				} else {
+					$this->socket->write("\n");
+				}
 			}
 			$data = $this->getStreamData([">", "#"], true);
 			$this->breakString = rtrim($data, "\n");
