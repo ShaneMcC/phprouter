@@ -40,8 +40,8 @@
 			$data = $this->getStreamData([">\n", "#\n", "> \n", "# \n"], true);
 			$this->breakString = rtrim($data, "\n");
 
-			$this->exec('term width 500');
-			$this->exec('term len 0');
+			$this->exec('terminal width 500');
+			$this->exec('terminal length 0');
 
 			if (method_exists($this, 'postConnect')) {
 				$this->postConnect();
